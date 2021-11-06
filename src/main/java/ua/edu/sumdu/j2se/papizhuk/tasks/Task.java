@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.papizhuk.tasks;
 
 public class Task {
     private String title;
+    private int time;
     private int start;
     private int end;
     private int interval;
@@ -10,6 +11,7 @@ public class Task {
 
     public Task(String title, int time) {
         this.title = title;
+        this.time = time;
         this.start = time;
         setActive(false);
         setRepeated(false);
@@ -44,26 +46,26 @@ public class Task {
         if (isRepeated()) {
             return start;
         }
-        return -1;
+        return time;
     }
 
     public void setTime(int time) {
         if (isRepeated()) {
             setRepeated(false);
         }
-        this.start = time;
+        this.time = time;
     }
 
     public int getStartTime() {
         if (!isRepeated()) {
-            return start;
+            return time;
         }
-        return -1;
+        return start;
     }
 
     public int getEndTime() {
         if (!isRepeated()) {
-            return start;
+            return time;
         }
         return end;
     }
@@ -93,20 +95,21 @@ public class Task {
     }
 
     public int nextTimeAfter(int current) {
-        if (!isActive()){
-            return -1;
-        }
-        if (current < start) {
-            return start;
-        }
-        for (int i = start; i < end - interval; i += interval) {
-            if (i == current) {
-                return i + interval;
+        if (isActive()) {
+            if (current < start) {
+                return start;
             }
-            if (current > i && current < i + interval) {
-                return i + interval;
+            for (int i = start; i < end - interval; i += interval) {
+                if (i == current) {
+                    return i + interval;
+                }
+                if (current > i && current < i + interval) {
+                    return i + interval;
+                }
             }
         }
         return -1;
     }
 }
+
+
