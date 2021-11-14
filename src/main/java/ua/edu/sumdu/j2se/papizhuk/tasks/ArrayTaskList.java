@@ -1,8 +1,5 @@
 package ua.edu.sumdu.j2se.papizhuk.tasks;
 
-import java.util.Arrays;
-import java.util.NoSuchElementException;
-
 public class ArrayTaskList {
     private Task[] taskArray;
     private int size;
@@ -14,6 +11,9 @@ public class ArrayTaskList {
     }
 
     public void add(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException();
+        }
         if (curr == size) {
             Task[] temp = new Task[size * 2];
             System.arraycopy(taskArray, 0, temp, 0, taskArray.length);
@@ -54,7 +54,7 @@ public class ArrayTaskList {
 
     public Task getTask(int index) {
         if (index < 0 || index >= curr) {
-            throw new NoSuchElementException();
+            throw new IndexOutOfBoundsException();
         }
         return taskArray[index];
     }
@@ -62,12 +62,11 @@ public class ArrayTaskList {
     public ArrayTaskList incoming(int from, int to) {
         ArrayTaskList income = new ArrayTaskList();
         for (int i = 0; i < curr; ++i) {
-            //for (int j = from; j < to; ++j){
-            if (taskArray[i].nextTimeAfter(from) != -1) {
+            if (taskArray[i].nextTimeAfter(from) != -1 &&
+                    taskArray[i].nextTimeAfter(from) <= to) {
+
                 income.add(taskArray[i]);
-                break;
             }
-            //}
         }
         return income;
     }
