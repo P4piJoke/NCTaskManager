@@ -10,6 +10,9 @@ public class Task {
     private boolean repeated;
 
     public Task(String title, int time) {
+        if (time < 0) {
+            throw new IllegalArgumentException();
+        }
         this.title = title;
         this.time = time;
         this.start = time;
@@ -18,6 +21,9 @@ public class Task {
     }
 
     public Task(String title, int start, int end, int interval) {
+        if (interval <= 0 || start < 0 || end < 0) {
+            throw new IllegalArgumentException();
+        }
         this.title = title;
         this.start = start;
         this.end = end;
@@ -50,6 +56,9 @@ public class Task {
     }
 
     public void setTime(int time) {
+        if (time < 0){
+            throw new IllegalArgumentException();
+        }
         if (isRepeated()) {
             setRepeated(false);
         }
@@ -78,6 +87,9 @@ public class Task {
     }
 
     public void setTime(int start, int end, int interval) {
+        if (interval <= 0 || start < 0 || end < 0) {
+            throw new IllegalArgumentException();
+        }
         if (!isRepeated()) {
             setRepeated(true);
         }
