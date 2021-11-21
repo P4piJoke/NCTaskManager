@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.papizhuk.tasks;
 
-public class ArrayTaskList {
+public class ArrayTaskList extends AbstractTaskList {
+
     private Task[] taskArray;
     private int size;
     private int curr;
@@ -10,6 +11,7 @@ public class ArrayTaskList {
         taskArray = new Task[size];
     }
 
+    @Override
     public void add(Task task) {
         if (task == null) {
             throw new IllegalArgumentException();
@@ -24,6 +26,7 @@ public class ArrayTaskList {
         ++curr;
     }
 
+    @Override
     public boolean remove(Task task) {
         int index = findTask(task);
         if (task == null || index == -1) {
@@ -48,10 +51,12 @@ public class ArrayTaskList {
         return -1;
     }
 
+    @Override
     public int size() {
         return curr;
     }
 
+    @Override
     public Task getTask(int index) {
         if (index < 0 || index >= curr) {
             throw new IndexOutOfBoundsException();
@@ -59,7 +64,8 @@ public class ArrayTaskList {
         return taskArray[index];
     }
 
-    public ArrayTaskList incoming(int from, int to) {
+    @Override
+    public AbstractTaskList incoming(int from, int to) {
         ArrayTaskList income = new ArrayTaskList();
         for (int i = 0; i < curr; ++i) {
             if (taskArray[i].nextTimeAfter(from) != -1 &&

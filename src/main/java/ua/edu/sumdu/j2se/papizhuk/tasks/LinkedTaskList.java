@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.papizhuk.tasks;
 
-public class LinkedTaskList {
+public class LinkedTaskList extends AbstractTaskList {
+
     private int size;
     private Node first;
     private Node last;
@@ -17,6 +18,7 @@ public class LinkedTaskList {
         }
     }
 
+    @Override
     public void add(Task task) {
         if (task == null) {
             throw new IllegalArgumentException();
@@ -32,6 +34,7 @@ public class LinkedTaskList {
         size++;
     }
 
+    @Override
     public boolean remove(Task task) {
         for (Node temp = first; temp != null; temp = temp.next) {
             if (task.equals(temp.task)) {
@@ -64,10 +67,12 @@ public class LinkedTaskList {
         size--;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public Task getTask(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
@@ -91,7 +96,8 @@ public class LinkedTaskList {
         return t;
     }
 
-    public LinkedTaskList incoming(int from, int to) {
+    @Override
+    public AbstractTaskList incoming(int from, int to) {
         LinkedTaskList ltl = new LinkedTaskList();
         Node curr = this.first;
         while (curr != null) {
