@@ -1,10 +1,46 @@
 package ua.edu.sumdu.j2se.papizhuk.tasks;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class LinkedTaskList extends AbstractTaskList {
 
     private int size;
     private Node first;
     private Node last;
+
+    @Override
+    public Iterator<Task> iterator() {
+        return new Iterator<Task>() {
+
+            private int currentIndex = 0;
+            private int lastRemoved = -1;
+
+            @Override
+            public boolean hasNext() {
+                return currentIndex < size;
+            }
+
+            @Override
+            public Task next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                lastRemoved = currentIndex;
+                return getTask(currentIndex++);
+            }
+
+            @Override
+            public void remove() {
+                if (currentIndex < 1) {
+                    throw new IllegalStateException();
+                }
+                LinkedTaskList.this.remove(getTask(lastRemoved));
+                currentIndex--;
+            }
+        };
+    }
 
     private class Node {
         Task task;
@@ -15,6 +51,19 @@ public class LinkedTaskList extends AbstractTaskList {
             task = t;
             this.next = next;
             this.prev = prev;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return Objects.equals(task, node.task) && Objects.equals(next, node.next) && Objects.equals(prev, node.prev);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(task, next, prev);
         }
     }
 
@@ -97,16 +146,29 @@ public class LinkedTaskList extends AbstractTaskList {
     }
 
     @Override
-    public AbstractTaskList incoming(int from, int to) {
-        LinkedTaskList ltl = new LinkedTaskList();
-        Node curr = this.first;
-        while (curr != null) {
-            if (curr.task.nextTimeAfter(from) != -1 &&
-                    curr.task.nextTimeAfter(from) <= to) {
-                ltl.add(curr.task);
-            }
-            curr = curr.next;
+    public int hashCode() {
+        return Objects.hash(size, first, last);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        return ltl;
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        LinkedTaskList taskList = (LinkedTaskList) obj;
+        for (int i = 0; i < size; ++i) {
+            if (!taskList.getTask(i).equals(getTask(i))) {
+                return false;
+            }
+        }
+        return size == taskList.size;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
