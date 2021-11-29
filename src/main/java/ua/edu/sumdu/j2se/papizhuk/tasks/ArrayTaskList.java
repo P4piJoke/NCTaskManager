@@ -1,5 +1,10 @@
 package ua.edu.sumdu.j2se.papizhuk.tasks;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class ArrayTaskList extends AbstractTaskList {
 
     private Task[] taskArray;
@@ -65,15 +70,60 @@ public class ArrayTaskList extends AbstractTaskList {
     }
 
     @Override
-    public AbstractTaskList incoming(int from, int to) {
-        ArrayTaskList income = new ArrayTaskList();
-        for (int i = 0; i < curr; ++i) {
-            if (taskArray[i].nextTimeAfter(from) != -1 &&
-                    taskArray[i].nextTimeAfter(from) <= to) {
+    public Iterator<Task> iterator() {
+        return new Iterator<Task>() {
 
-                income.add(taskArray[i]);
+            private int currIndex = 0;
+            private int lastRemoved = -1;
+
+            @Override
+            public boolean hasNext() {
+                return currIndex < curr;
             }
+
+            @Override
+            public Task next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                lastRemoved = currIndex;
+                return taskArray[currIndex++];
+            }
+
+            @Override
+            public void remove() {
+                if (currIndex < 1) {
+                    throw new IllegalStateException();
+                }
+                ArrayTaskList.this.remove(taskArray[lastRemoved]);
+                currIndex--;
+            }
+        };
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = Objects.hash(size, curr);
+        hash = 31 * hash + Arrays.hashCode(taskArray);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        return income;
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ArrayTaskList taskList = (ArrayTaskList) obj;
+        return size == taskList.size &&
+                curr == taskList.curr &&
+                Arrays.equals(taskArray, taskList.taskArray);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
