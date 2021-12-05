@@ -1,5 +1,8 @@
 package ua.edu.sumdu.j2se.papizhuk.tasks;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public abstract class AbstractTaskList implements Iterable<Task> {
 
     public abstract void add(Task task);
@@ -10,15 +13,19 @@ public abstract class AbstractTaskList implements Iterable<Task> {
 
     public abstract Task getTask(int index);
 
-    public AbstractTaskList incoming(int from, int to) {
+    public final AbstractTaskList incoming(int from, int to) {
         AbstractTaskList atl = getAbstractTaskList();
-        for (int i = 0; i < atl.size(); ++i) {
-            if (getTask(i).nextTimeAfter(from) != -1 &&
-                    getTask(i).nextTimeAfter(from) <= to) {
-                atl.add(getTask(i));
-            }
-        }
+        getStream().filter(t -> t.nextTimeAfter(from) != -1
+                && t.nextTimeAfter(from) <= to).forEach(atl::add);
         return atl;
+    }
+
+    public Stream<Task> getStream() {
+        Task[] tasks = new Task[this.size()];
+        for (int i = 0; i < tasks.length; ++i) {
+            tasks[i] = getTask(i);
+        }
+        return Arrays.stream(tasks);
     }
 
     private AbstractTaskList getAbstractTaskList() {
