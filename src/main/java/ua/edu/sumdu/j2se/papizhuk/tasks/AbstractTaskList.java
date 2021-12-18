@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.papizhuk.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -13,10 +14,10 @@ public abstract class AbstractTaskList implements Iterable<Task> {
 
     public abstract Task getTask(int index);
 
-    public final AbstractTaskList incoming(int from, int to) {
+    public final AbstractTaskList incoming(LocalDateTime from, LocalDateTime to) {
         AbstractTaskList atl = getAbstractTaskList();
-        getStream().filter(t -> t.nextTimeAfter(from) != -1
-                && t.nextTimeAfter(from) <= to).forEach(atl::add);
+        getStream().filter(t -> t.nextTimeAfter(from).isAfter(from)
+                && t.nextTimeAfter(to).isBefore(to)).forEach(atl::add);
         return atl;
     }
 
@@ -28,7 +29,7 @@ public abstract class AbstractTaskList implements Iterable<Task> {
         return Arrays.stream(tasks);
     }
 
-    private AbstractTaskList getAbstractTaskList() {
+    public AbstractTaskList getAbstractTaskList() {
         return (this.getClass().getSimpleName().equals("ArrayTaskList")) ?
                 TaskListFactory.createTaskList(ListTypes.types.ARRAY) :
                 TaskListFactory.createTaskList(ListTypes.types.LINKED);
