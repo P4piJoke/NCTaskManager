@@ -1,9 +1,16 @@
-package ua.edu.sumdu.j2se.papizhuk.tasks;
+package ua.edu.sumdu.j2se.papizhuk.tasks.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Class for storing task data.
+ *
+ * @author Danylo Papizhuk
+ * @version 1.0.0
+ * @since 1.8.0_311
+ */
 public class Task implements Cloneable, Serializable {
 
     private String title;
@@ -14,6 +21,12 @@ public class Task implements Cloneable, Serializable {
     private boolean active;
     private boolean repeated;
 
+    /**
+     * Constructor for a non-repetitive task.
+     *
+     * @param title - task title
+     * @param time  - task time
+     */
     public Task(String title, LocalDateTime time) {
         if (time == null) {
             throw new IllegalArgumentException();
@@ -24,6 +37,14 @@ public class Task implements Cloneable, Serializable {
         setRepeated(false);
     }
 
+    /**
+     * Constructor for a repetitive task.
+     *
+     * @param title    - task title
+     * @param start    - task start time
+     * @param end      - task end time
+     * @param interval - task interval
+     */
     public Task(String title, LocalDateTime start, LocalDateTime end, int interval) {
         if (interval <= 0 || start == null || end == null) {
             throw new IllegalArgumentException();
@@ -36,22 +57,47 @@ public class Task implements Cloneable, Serializable {
         setRepeated(true);
     }
 
+    /**
+     * Returns task title.
+     *
+     * @return title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets task title.
+     *
+     * @param title - task title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Returns task activity.
+     *
+     * @return true is task is active, false if inactive.
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Sets task activity.
+     *
+     * @param active - task activity
+     */
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    /**
+     * Returns task time.
+     *
+     * @return time
+     */
     public LocalDateTime getTime() {
         if (isRepeated()) {
             return start;
@@ -59,6 +105,11 @@ public class Task implements Cloneable, Serializable {
         return time;
     }
 
+    /**
+     * Sets task time.
+     *
+     * @param time - task time
+     */
     public void setTime(LocalDateTime time) {
         if (time == null) {
             throw new IllegalArgumentException();
@@ -69,6 +120,11 @@ public class Task implements Cloneable, Serializable {
         this.time = time;
     }
 
+    /**
+     * Returns task start time.
+     *
+     * @return start time
+     */
     public LocalDateTime getStartTime() {
         if (!isRepeated()) {
             return time;
@@ -76,6 +132,11 @@ public class Task implements Cloneable, Serializable {
         return start;
     }
 
+    /**
+     * Returns task end time.
+     *
+     * @return end time
+     */
     public LocalDateTime getEndTime() {
         if (!isRepeated()) {
             return time;
@@ -83,6 +144,11 @@ public class Task implements Cloneable, Serializable {
         return end;
     }
 
+    /**
+     * Returns task interval.
+     *
+     * @return interval
+     */
     public int getRepeatInterval() {
         if (!isRepeated()) {
             return 0;
@@ -90,6 +156,13 @@ public class Task implements Cloneable, Serializable {
         return interval;
     }
 
+    /**
+     * Sets repetitive task time.
+     *
+     * @param start    - start time
+     * @param end      - end time
+     * @param interval - interval
+     */
     public void setTime(LocalDateTime start, LocalDateTime end, int interval) {
         if (interval <= 0 || start == null || end == null) {
             throw new IllegalArgumentException();
@@ -102,14 +175,30 @@ public class Task implements Cloneable, Serializable {
         this.interval = interval;
     }
 
+    /**
+     * Returns the repetitive status.
+     *
+     * @return true if task is repetitive, false if non-repetitive
+     */
     public boolean isRepeated() {
         return repeated;
     }
 
+    /**
+     * Sets the repetitive status.
+     *
+     * @param repeated - repetitive status
+     */
     public void setRepeated(boolean repeated) {
         this.repeated = repeated;
     }
 
+    /**
+     * Returns the time of the next task after the specified time.
+     *
+     * @param current - specified time
+     * @return next task time if the task run after the specified time, null if the task doesn't
+     */
     public LocalDateTime nextTimeAfter(LocalDateTime current) {
         if (isActive()) {
             if (!isRepeated()) {
@@ -117,7 +206,9 @@ public class Task implements Cloneable, Serializable {
                     return time;
                 } else return null;
             }
-            for (LocalDateTime i = start; i.isBefore(end) || i.equals(end); i = i.plusSeconds(interval)) {
+            for (LocalDateTime i = start;
+                 i.isBefore(end) || i.equals(end);
+                 i = i.plusSeconds(interval)) {
                 if (current.isBefore(i)) {
                     return i;
                 }
@@ -171,5 +262,3 @@ public class Task implements Cloneable, Serializable {
                 '}';
     }
 }
-
-

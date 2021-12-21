@@ -1,0 +1,10 @@
+/target
+/.idea
+/classes
+/NCTaskManager.iml
+/README.md
+/readme_img
+/task_manager_log_file.log
+/test.json
+/taskManager.json
+/src/main/java/META-INF

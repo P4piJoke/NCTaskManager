@@ -1,15 +1,32 @@
-package ua.edu.sumdu.j2se.papizhuk.tasks;
+package ua.edu.sumdu.j2se.papizhuk.tasks.model;
+
+import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * Class for storing tasks.
+ *
+ * @author Danylo Papizhuk
+ * @version 1.0.0
+ * @see java.util.LinkedList
+ * @see AbstractTaskList
+ * @since 1.8.0_311
+ */
 public class LinkedTaskList extends AbstractTaskList {
 
+    private static final Logger log = Logger.getLogger(LinkedTaskList.class);
     private int size;
     private Node first;
     private Node last;
 
+    /**
+     * Returns the iterator for navigating through the linked task list.
+     *
+     * @return linked task list iterator
+     */
     @Override
     public Iterator<Task> iterator() {
         return new Iterator<Task>() {
@@ -67,8 +84,14 @@ public class LinkedTaskList extends AbstractTaskList {
         }
     }
 
+    /**
+     * Adds the task to the linked task list.
+     *
+     * @param task - task to be added
+     */
     @Override
     public void add(Task task) {
+        log.info("Processing task addition");
         if (task == null) {
             throw new IllegalArgumentException();
         }
@@ -83,8 +106,15 @@ public class LinkedTaskList extends AbstractTaskList {
         size++;
     }
 
+    /**
+     * Deletes the task from the linked task list.
+     *
+     * @param task - task to be deleted
+     * @return true if the task was deleted, false if not
+     */
     @Override
     public boolean remove(Task task) {
+        log.info("Processing task deletion");
         for (Node temp = first; temp != null; temp = temp.next) {
             if (task.equals(temp.task)) {
                 removeTask(temp);
@@ -116,13 +146,26 @@ public class LinkedTaskList extends AbstractTaskList {
         size--;
     }
 
+    /**
+     * Returns linked task list size.
+     *
+     * @return size of the linked task list
+     */
     @Override
     public int size() {
+        log.info("Getting linked task list size");
         return size;
     }
 
+    /**
+     * Returns task by index.
+     *
+     * @param index - index to find a task in the linked task list
+     * @return desired task
+     */
     @Override
     public Task getTask(int index) {
+        log.info("Processing task taking by index");
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
